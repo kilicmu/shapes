@@ -50,9 +50,11 @@ export default class Radar {
                     ctx.arc(p.x, p.y, 4, 0, Math.PI * 2, true)
                     ctx.fillStyle = this.fillColor
                     ctx.fill()
+                    dom.style = "cursor: pointer;"
                     return
                 }
             }
+            dom.style = ""
             this.draw(1)
         })
         
