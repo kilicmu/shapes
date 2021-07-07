@@ -1,6 +1,6 @@
-import {createLayer} from "../../utils/helpers.js"
+import {createLayer} from "../utils/helpers.js"
 
-export default class Radar {
+export class Radar {
     constructor(target, width, height, states, options = {angleCount: 6, strokeColor: "#aaa", fillColor: "rgba(100, 200, 0, 0.5)"}) {
         this.target = typeof target === 'string' ? document.querySelector(target) : target
         this.canvas = null
@@ -46,6 +46,7 @@ export default class Radar {
                     p.y - 4 < y 
                 ){
                     const ctx = this.ctx
+                    this.draw(1)
                     ctx.beginPath()
                     ctx.arc(p.x, p.y, 4, 0, Math.PI * 2, true)
                     ctx.fillStyle = this.fillColor
@@ -70,10 +71,6 @@ export default class Radar {
         ctx.clearRect(0, 0, this.width, this.height)
         ctx.beginPath()
         ctx.save()
-        // rotate by center
-        // ctx.translate(this._centerPoint.x, this._centerPoint.y)
-        // ctx.rotate(-Math.PI / 2)
-        // ctx.translate(-this._centerPoint.x, -this._centerPoint.y)
 
         for(let i = 0; i < n; i++) {
             const ratio = 1 / n * (n - i)
@@ -84,10 +81,7 @@ export default class Radar {
             }
         }
 
-        
-        
         this.drawLines({x: 200, y: 200}, vertices)
-
         this.drawStates(percent);
         ctx.restore()
         this.drawLabels(vertices)
@@ -108,13 +102,11 @@ export default class Radar {
         ctx.clip()
         ctx.beginPath()
         ctx.moveTo(vertices[0].x, vertices[0].y)
-        console.log(vertices)
         for(let i = 1; i < this.angleCount; i++) {
             const v = vertices[i]
             ctx.lineTo(v.x, v.y)
         }
         ctx.fillStyle = this.fillColor
-        ctx.strokeStyle = "green"
         ctx.fill()
         parentCtx.drawImage(canvas, 0, 0)
     }
