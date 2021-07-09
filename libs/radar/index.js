@@ -49,7 +49,13 @@ export class Radar {
                     this.draw(1)
                     ctx.beginPath()
                     ctx.arc(p.x, p.y, 4, 0, Math.PI * 2, true)
+                    
                     ctx.fillStyle = this.fillColor
+                    ctx.fill()
+                    ctx.beginPath()
+                    ctx.fillStyle = 'green'
+                    ctx.font = '16px serif'
+                    ctx.fillText(p.label, p.x + 10, p.y + 10, this.width / 2)
                     ctx.fill()
                     dom.style = "cursor: pointer;"
                     return
@@ -81,10 +87,10 @@ export class Radar {
             }
         }
 
-        this.drawLines({x: 200, y: 200}, vertices)
+        this.drawLines({x: this.width / 2, y: this.height / 2}, vertices)
         this.drawStates(percent);
         ctx.restore()
-        this.drawLabels(vertices)
+        // this.drawLabels(vertices)
         requestAnimationFrame(() => this.draw(percent + 1 / this.angleCount))
     }
 
@@ -120,14 +126,19 @@ export class Radar {
 
     initStateVertices() {
         const states = this.states
+        console.log(states)
         const vertices = []
         const ctx = this.ctx
         const baseLen = this._radius
         const n = this.angleCount
-
+        if(n > states.length) {
+            throw new Error('states count less then angle count, check your states counts')
+        }
         for (let i = 0; i < n; i++) {
-          const r = states[i] * baseLen
+            console.log(states[i].proportion)
+          const r = states[i].proportion * baseLen
           const p = this.generateVerticesByRadiusAndRadian(r, 2 * Math.PI * i / n)
+          p.label = this.states[i].label
           vertices.push(p)
         }
         this.stateVertices = vertices
